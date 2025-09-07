@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/vladdyz/fragments/issues"
   },
-  "homepage": "https://github.com/vladdyz/fragments#readme"
+  "homepage": "https://github.com/vladdyz/fragments#readme",
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
 }
