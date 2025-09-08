@@ -44,7 +44,6 @@ app.get('/', (req, res) => {
   res.status(200).json({
     status: 'ok',
     author,
-    // TODO: change this to use your GitHub username!
     githubUrl: 'https://github.com/vladdyz/fragments',
     version,
   });
