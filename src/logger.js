@@ -28,6 +28,8 @@ if (options.level === 'debug') {
       colorize: true,
     },
   };
+  // Using structured logging to debug the environment variables instead
+  // console.log(process.env);
 }
 
 // Create and export a Pino Logger instance:

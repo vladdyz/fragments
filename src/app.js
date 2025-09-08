@@ -39,7 +39,8 @@ app.get('/', (req, res) => {
   // Clients shouldn't cache this response (always request it fresh)
   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
   res.setHeader('Cache-Control', 'no-cache');
-
+  // Print the currently used env vars while debugging
+  logger.debug(process.env, 'Environment Variables');
   // Send a 200 'OK' response with info about our repo
   res.status(200).json({
     status: 'ok',

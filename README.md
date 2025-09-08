@@ -22,6 +22,8 @@ Starts the server in production mode on port 8080 : http://localhost:8080/
 
 Allows the server to run while connecting the VSCode debugger to the process, useful for setting breakpoints, checking the value of variables at a given point in the code, and observing the callstack. Relies on the .vscode/launch.json script.
 
+Currently, environment variables are logged when running this script.
+
 ### npm run dev
 
 Starts the server in the development environment on port 8080.
