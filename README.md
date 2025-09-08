@@ -33,54 +33,54 @@ Why run this instead of npm start?
 
 ## Dependencies
 
-# Compression
+### Compression
 
 This middleware is used in compressing response bodies for all requests
 
-# CORS
+### CORS
 
 Cross-Origin Resource Sharing middleware. Allows web pages to access restricted resources from a server/domain different than the one that serves the page.
 
-# Helmet
+### Helmet
 
 Security middleware used to set HTTP response headers (for a default list see https://helmetjs.github.io/)
 
-# Express
+### Express
 
 We're going to build some RESTful APIs with node and have lots of routes and req/res
 
-# Pino
+### Pino
 
 Used for structured logging, more detailed and robust than spamming console.log and print statements throughout various routes and functions to see where the code goes
 
-# Stoppable
+### Stoppable
 
 Lets the server exit gracefully, waits until current connections are finished before shutting down
 
 ## Development Dependencies
 
-# ESLint
+### ESLint
 
 Code analysis tool for identifying and fixing problems. See `npm run lint`
 
-# Prettier
+### Prettier
 
 Opinionated code formatter. Makes it less painful for others to peruse my code.
 
-# Globals
+### Globals
 
 Used by ESLint
 
 ## Modules
 
-# Server.js
+### Server.js
 
-Entry point for the app
+Entry point for the app, server starts here
 
-# App.js
+### App.js
 
 Routes and middleware currently here
 
-# Logger.js
+### Logger.js
 
 Structured logging using Pino, this is the configuration file.
