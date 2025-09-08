@@ -1,5 +1,4 @@
 // When running the server in debug mode (npm debug), connect VSCode to the process
-
 {
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
