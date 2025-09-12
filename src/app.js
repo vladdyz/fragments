@@ -1,5 +1,3 @@
-// src/app.js
-
 const express = require('express');
 // cross-origin resource sharing middleware
 // allows web pages to access restricted resources from a server/domain different than the one that serves the page
