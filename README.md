@@ -59,6 +59,22 @@ Used for structured logging, more detailed and robust than spamming console.log 
 
 Lets the server exit gracefully, waits until current connections are finished before shutting down
 
+### Passport
+
+Authenticates user credentials
+
+### Passport-HTTP-Bearer
+
+Authenticates HTTP requests using bearer tokens, verifying user credentials to protect API endpoints
+
+### AWS JWT Verify
+
+Used here with Amazon Cognito, this is a JS library solely for verifying signed JWTs
+
+### Dotenv
+
+Loads environmental variables into process.env for use throughout this app
+
 ## Development Dependencies
 
 ### ESLint
@@ -86,3 +102,11 @@ Routes and middleware currently here
 ### Logger.js
 
 Structured logging using Pino, this is the configuration file.
+
+### Auth.js
+
+Secure Cognito JTW Authentication for AWS
+
+### Index.js
+
+The main entrypoint for each directory (currently: src, routes, api)
