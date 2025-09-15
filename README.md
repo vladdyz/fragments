@@ -93,7 +93,7 @@ Used by ESLint
 
 ### Server.js
 
-Entry point for the app, server starts here
+Supports Index.js as the entry point for the app, server starts here. Gets instances and starts listening.
 
 ### App.js
 
@@ -109,4 +109,4 @@ Secure Cognito JTW Authentication for AWS
 
 ### Index.js
 
-The main entrypoint for each directory (currently: src, routes, api)
+The main entrypoint for each directory (currently: src, routes, api).
