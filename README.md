@@ -33,6 +33,24 @@ Why run this instead of npm start?
 - Add or remove modules while app is running
 - Easier to debug and develop app, improving workflow
 
+### npm test
+
+Runs testing using the jest module, note that this entails using separate environmental variable configuration. This is used to distinguish the authentication flow in the production environment (where it uses Cognito) from the testing environment (which uses hardcoded users in the .htpasswd file).
+
+The test suites are contained in the tests/\* directories, grouped accordingly (e.g. unit tests in the tests/unit folder, and so on). The nomenclature consists of the type of test, the word "test" and the file extension, delimited by dots. E.g. the 'response.test.js' test suite contains tests that expect success/error responses to be returned, the health.test.js suite contains tests to validate the health and connectivity of the app, etc.
+
+To run specific individual test suites, append the name of the file to the command : npm test get.test.js
+
+### npm test:watch
+
+Same as above, except responsive to changes in realtime by watching the files instead of terminating immediately after the testing concludes. Re-runs the tests when a change is detected. Also works with individual test suites.
+
+### npm run coverage
+
+In addition to running tests, also collects detailed coverage information. Displays the files that were included in the testing, providing a breakdown of the statements, branches, functions, and lines covered by the tests. Useful to identify which parts of the code aren't included in the tests by their line #s. Provides an overall coverage % of the breakdowns.
+
+Also shows a much more elaborate web version of the report by opening the file coverage/lcov-report/index.html in the browser (the coverage/ directory will have been created when you ran the command above).
+
 ## Dependencies
 
 ### Compression
@@ -75,6 +93,10 @@ Used here with Amazon Cognito, this is a JS library solely for verifying signed 
 
 Loads environmental variables into process.env for use throughout this app
 
+### HTTP-Auth & HTTP-Auth-Passport
+
+Node.js package for HTTP basic and digest access authentication & the Passport.js integration. Used with the htpasswd utility. Tests basic user authentication without the need to overcomplicate the test setup with Cognito User Pools and Authentication UI/domains. Uses the hardcoded test accounts within .htpasswd instead.
+
 ## Development Dependencies
 
 ### ESLint
@@ -88,6 +110,14 @@ Opinionated code formatter. Makes it less painful for others to peruse my code.
 ### Globals
 
 Used by ESLint
+
+### Jest
+
+Used for testing and debugging purposes
+
+### Supertest
+
+HTTP assertion module used to write tests for REST APIs, creates HTTP requests to Express routes and allows writing assertions about what kind of response code & body is expected to be returned from those routes
 
 ## Modules
 
@@ -103,10 +133,18 @@ Routes and middleware currently here
 
 Structured logging using Pino, this is the configuration file.
 
-### Auth.js
+### Cognito.js / Basic-Auth.js
 
-Secure Cognito JTW Authentication for AWS
+Secure Cognito JTW Authentication for AWS / Test module equivalent for HTTP authentication using hardcoded users from HTPASSWD
 
 ### Index.js
 
-The main entrypoint for each directory (currently: src, routes, api).
+The main entrypoint for each directory (currently: src, routes, api, auth).
+
+### response.js
+
+Defines what successful & unsuccessful should look like for testing purposes
+
+### tests/
+
+The files in this directory are specifically test suites & cases for project code coverage, to validate that the code pushed to main is working as expected. These are also integrated into the CI pipeline along with ESLint - a commit will fail if it does not pass one or more of these tests!
