@@ -1,8 +1,17 @@
+// The following code was originally in /src/auth.js
+// It has been moved here and renamed cognito.js to distinguish it from the basic-auth file
+// which is used to test the authentication process using hardcoded test user accounts
+// The original auth.js has since been deprecated from this project and deleted
 const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const { CognitoJwtVerifier } = require('aws-jwt-verify');
 
-const logger = require('./logger');
+const logger = require('../logger');
+
+// We expect AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID to be defined.
+if (!(process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID)) {
+  throw new Error('missing expected env vars: AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID');
+}
 
 // Create a Cognito JWT Verifier, which will confirm that any JWT we
 // get from a user is valid and something we can trust. See:
