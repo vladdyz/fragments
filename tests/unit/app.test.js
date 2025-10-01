@@ -9,3 +9,17 @@ describe('404 Middleware Test', () => {
     expect(res.statusCode).toBe(404);
   });
 });
+
+describe('Valid route', () => {
+  test('Accessing valid route should return 200', async () => {
+    const res = await request(app).get('/');
+    expect(res.statusCode).toBe(200);
+  });
+});
+
+describe('Auth test', () => {
+  test('Accessing secured route should return unauthorized', async () => {
+    const res = await request(app).get('/v1/fragments');
+    expect(res.statusCode).toBe(401);
+  });
+});
