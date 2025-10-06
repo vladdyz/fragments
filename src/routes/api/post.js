@@ -9,6 +9,7 @@ module.exports = async (req, res) => {
       const authenticated = req.user;
       if (!authenticated) {
         logger.warn(`User ${req.user} is not authenticated!`);
+        logger.debug('Unauthentication caught by post route instead of middleware');
         return res.status(401).json({ error: 'Unauthenticated User' });
       }
       // if user is authenticated and fragment type is supported, lets save it
@@ -22,7 +23,7 @@ module.exports = async (req, res) => {
       // store the buffer
       await fragment.setData(req.body);
       logger.debug(`Fragment data: ${fragment}`);
-      logger.debug('Fragment saved and buffer stored');
+      logger.info('Fragment saved and buffer stored');
       // configure URL depending on if we're running locally or not then set to location header
       const apiUrl = process.env.API_URL || `http://${req.headers.host}`;
       res.set('Location', `${apiUrl}/v1/fragments/${fragment.id}`);

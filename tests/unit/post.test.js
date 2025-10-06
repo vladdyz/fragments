@@ -39,7 +39,11 @@ describe('POST /fragments tests', () => {
       .send('This text has 27 characters');
     const fragment = res.body.fragment;
     expect(fragment).toHaveProperty('id');
-    expect(fragment).toHaveProperty('ownerId', 'testaccount1@email.com');
+    // ownerId is now hashed using SHA256 instead of plain text ('testaccount1@email.com')
+    expect(fragment).toHaveProperty(
+      'ownerId',
+      '494e409b86dd092cbb928c8b8a41d36310d426c25644cb27263d62329a4d3f5a'
+    );
     expect(fragment).toHaveProperty('type', 'text/plain');
     expect(fragment).toHaveProperty('size', 27);
     expect(fragment).toHaveProperty('created');
