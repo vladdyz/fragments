@@ -27,19 +27,19 @@ module.exports = async (req, res) => {
       // configure URL depending on if we're running locally or not then set to location header
       const apiUrl = process.env.API_URL || `http://${req.headers.host}`;
       res.set('Location', `${apiUrl}/v1/fragments/${fragment.id}`);
-      /* Example of what a response should look like according to the documentation:
-      {
-        "status": "ok",
-        "fragment": {
-          "id": "30a84843-0cd4-4975-95ba-b96112aea189",
-          "ownerId": "11d4c22e42c8f61feaba154683dea407b101cfd90987dda9e342843263ca420a",
-          "created": "2021-11-02T15:09:50.403Z",
-          "updated": "2021-11-02T15:09:50.403Z",
-          "type": "text/plain",
-          "size": 256
-        }
-      } 
-      */
+      /** Example of what a response should look like according to the documentation:
+       * {
+       *   "status": "ok",
+       *   "fragment": {
+       *     "id": "30a84843-0cd4-4975-95ba-b96112aea189",
+       *     "ownerId": "11d4c22e42c8f61feaba154683dea407b101cfd90987dda9e342843263ca420a",
+       *     "created": "2021-11-02T15:09:50.403Z",
+       *     "updated": "2021-11-02T15:09:50.403Z",
+       *     "type": "text/plain",
+       *     "size": 256
+       *   }
+       * }
+       **/
       res.status(200).json({
         status: 'ok',
         fragment,
