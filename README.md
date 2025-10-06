@@ -153,7 +153,7 @@ The main entrypoint for each directory (currently: src, routes, api, auth).
 
 Defines what successful & unsuccessful should look like for testing purposes
 
-### API/
+### API /
 
 The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js)
 
