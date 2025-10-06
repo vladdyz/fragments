@@ -43,8 +43,8 @@ class Fragment {
   static async byUser(ownerId, expand = false) {
     const fragments = await listFragments(ownerId, expand);
     // need to determine what to return by the expand param, expand expects an array
-    if (!expand) return fragments;
-    else return [JSON.parse(fragments)];
+    if (!expand) return Promise.resolve(fragments);
+    else return Promise.resolve([JSON.parse(fragments)]);
   }
 
   /**
@@ -57,7 +57,7 @@ class Fragment {
     // TIP: make sure you properly re-create a full Fragment instance after getting from db.
     const found = await readFragment(ownerId, id);
     if (!found) throw new Error(`Fragment "${id}" not found`);
-    return new Fragment(found);
+    return Promise.resolve(new Fragment(found));
   }
 
   /**
@@ -71,7 +71,8 @@ class Fragment {
     // function should be asynchronous
     const found = await readFragment(ownerId, id);
     if (!found) throw new Error('Fragment does not exist');
-    return await deleteFragment(ownerId, id);
+    await deleteFragment(ownerId, id);
+    return Promise.resolve();
   }
 
   /**
@@ -81,7 +82,8 @@ class Fragment {
   async save() {
     // first log the time when fragment was updated prior to saving
     this.updated = new Date().toISOString();
-    return writeFragment(this);
+    await writeFragment(this);
+    return Promise.resolve();
   }
 
   /**
@@ -89,7 +91,8 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    return readFragmentData(this.ownerId, this.id);
+    const data = readFragmentData(this.ownerId, this.id);
+    return Promise.resolve(data);
   }
 
   /**
@@ -106,7 +109,8 @@ class Fragment {
     this.size = data.length; // should be LENGTH not size
     // TIP: make sure you update the metadata whenever you change the data, so they match
     await writeFragmentData(this.ownerId, this.id, data);
-    return writeFragment(this);
+    await writeFragment(this);
+    return Promise.resolve();
   }
 
   /**
