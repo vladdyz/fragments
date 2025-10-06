@@ -137,6 +137,14 @@ Structured logging using Pino, this is the configuration file.
 
 Secure Cognito JTW Authentication for AWS / Test module equivalent for HTTP authentication using hardcoded users from HTPASSWD
 
+### Hash.js
+
+Encrypts user data to store hashed email addresses instead of as lain-text
+
+### Auth-middleware
+
+Authentication middleware used in fragments routes, also hashes the user's email address (ownerId) on requests
+
 ### Index.js
 
 The main entrypoint for each directory (currently: src, routes, api, auth).
@@ -144,6 +152,14 @@ The main entrypoint for each directory (currently: src, routes, api, auth).
 ### response.js
 
 Defines what successful & unsuccessful should look like for testing purposes
+
+### API/
+
+The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js)
+
+### Model /
+
+Defines the fragment data model (Fragment.js) and associated methods (read/write/list/delete) as well as an In-Memory Database backend to store fragments (to be replaced by AWS backend data stores in future versions)
 
 ### tests/
 
