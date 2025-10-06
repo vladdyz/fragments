@@ -161,6 +161,6 @@ The main entry-point for the v1 version of the fragments API, currently includes
 
 Defines the fragment data model (Fragment.js) and associated methods (read/write/list/delete) as well as an In-Memory Database backend to store fragments (to be replaced by AWS backend data stores in future versions)
 
-### tests/
+### Tests /
 
 The files in this directory are specifically test suites & cases for project code coverage, to validate that the code pushed to main is working as expected. These are also integrated into the CI pipeline along with ESLint - a commit will fail if it does not pass one or more of these tests!
