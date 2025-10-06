@@ -136,18 +136,6 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    /*return [
-      'text/plain',
-      'text/plain; charset=utf-8',
-      'text/markdown',
-      'text/html',
-      'text/csv',
-      'application/json',
-      'application/yaml',
-      'image/png',
-      'image/jpeg',
-      'image/webp',
-    ];*/
     return [this.mimeType];
   }
 

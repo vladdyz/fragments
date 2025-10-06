@@ -81,4 +81,15 @@ describe('POST /fragments tests', () => {
       .send('No auth test');
     expect(res.statusCode).toBe(401);
   });
+
+  test('Posted fragment exceeds 5MB in size and is rejected', async () => {
+    // the size can't be set manually so a payload exceeding 5MB must actually be created
+    const reallyBigString = 'A'.repeat(5 * 1024 * 1024 + 1);
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send(reallyBigString);
+    expect(res.statusCode).toBe(413);
+  });
 });
