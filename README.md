@@ -159,7 +159,7 @@ The main entry-point for the v1 version of the fragments API, currently includes
 
 ### Model /
 
-Defines the fragment data model (Fragment.js) and associated methods (read/write/list/delete) as well as an In-Memory Database backend to store fragments (to be replaced by AWS backend data stores in future versions)
+Defines the fragment data model (Fragment.js) and associated methods (read/write/list/delete) as well as an In-Memory mock database backend to store fragments (to be replaced by AWS backend data stores in future versions)
 
 ### Tests /
 
