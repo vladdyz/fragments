@@ -5,13 +5,6 @@ module.exports = async (req, res) => {
   try {
     if (Buffer.isBuffer(req.body)) {
       logger.debug('POST request from authenticated user');
-      // confirm user is authenticated
-      const authenticated = req.user;
-      if (!authenticated) {
-        logger.warn(`User ${req.user} is not authenticated!`);
-        logger.debug('Unauthentication caught by post route instead of middleware');
-        return res.status(401).json({ error: 'Unauthenticated User' });
-      }
       // if user is authenticated and fragment type is supported, lets save it
       logger.debug('Creating Fragment instance');
       const fragment = new Fragment({
