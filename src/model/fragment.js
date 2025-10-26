@@ -44,7 +44,18 @@ class Fragment {
     const fragments = await listFragments(ownerId, expand);
     // need to determine what to return by the expand param, expand expects an array
     if (!expand) return Promise.resolve(fragments);
-    else return Promise.resolve([JSON.parse(fragments)]);
+    // refactored this code as original expand path used [JSON.parse(fragments)] as a return
+    // where fragments is an array of strings from the memory layer, this will throw
+    // it now maps to rehydrate into Fragment objects instead
+    else
+      return Promise.resolve(
+        fragments.map((fragment) => {
+          const fragmentObj = JSON.parse(fragment);
+          return new Fragment(fragmentObj);
+        })
+      );
+
+    //else return Promise.resolve([JSON.parse(fragments)]);
   }
 
   /**
