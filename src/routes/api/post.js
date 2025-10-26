@@ -33,16 +33,16 @@ module.exports = async (req, res) => {
        *   }
        * }
        **/
-      res.status(200).json({
+      res.status(201).json({
         status: 'ok',
         fragment,
       });
       logger.info('POST request successful: new fragment posted');
     } else {
       logger.warn('Invalid unsupported type');
-      res.status(400).json({
+      logger.debug('Content type: ', req.get('Content-Type'));
+      res.status(415).json({
         status: 'error',
-        fragments: [],
         message: 'Invalid unsupported type',
       });
     }

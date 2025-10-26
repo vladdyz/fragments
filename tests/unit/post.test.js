@@ -17,7 +17,7 @@ describe('POST /fragments tests', () => {
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'text/plain')
       .send('text');
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
   });
 
@@ -27,7 +27,7 @@ describe('POST /fragments tests', () => {
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'application/exe')
       .send('test');
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(415);
     expect(res.body.message).toBe('Invalid unsupported type');
   });
 
@@ -82,7 +82,7 @@ describe('POST /fragments tests', () => {
     expect(res.statusCode).toBe(401);
   });
 
-  test('Posted fragment exceeds 5MB in size and is rejected', async () => {
+  test('Posted fragment exceeds 5MB limit and is rejected', async () => {
     // the size can't be set manually so a payload exceeding 5MB must actually be created
     const reallyBigString = 'A'.repeat(5 * 1024 * 1024 + 1);
     const res = await request(app)
