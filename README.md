@@ -155,7 +155,8 @@ Defines what successful & unsuccessful should look like for testing purposes
 
 ### API /
 
-The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js)
+The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js).
+The GET route now supports params (e.g. /v1/fragments/{id}) to return a specific plain-text fragment, provided the user is authenticated and the owner of the fragment.
 
 ### Model /
 
