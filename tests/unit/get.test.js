@@ -20,3 +20,44 @@ describe('GET /v1/fragments', () => {
 
   // TODO: we'll need to add tests to check the contents of the fragments array later
 });
+
+describe('GET /v1/fragments/:id', () => {
+  // Return a specific fragment by its id
+  test('Return an existing fragment created by the current user through its ID', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}`)
+      .auth('testaccount1@email.com', 'password1');
+    expect(req.statusCode).toBe(200);
+  });
+  // a different user should not be able to retrieve this specific fragment
+  test('Attempting to return an existing fragment created by a different user through its ID should fail', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}`)
+      .auth('kittens@email.com', 'drowssap');
+    expect(req.statusCode).toBe(404);
+  });
+  test('Attempting to return an existing fragment by an unauthorized user should fail', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}`)
+      .auth('invalidaccount@email.com', '123');
+    expect(req.statusCode).toBe(401);
+  });
+});
