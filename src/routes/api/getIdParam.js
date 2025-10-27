@@ -71,7 +71,6 @@ module.exports = async (req, res) => {
     // if something goes wrong, also return a 404 (since we can't find a fragment) but log the error
     logger.error('Unable to retrieve fragment data by id');
     logger.debug('Unexpected error occurred during GET src/routes/api/getIdParam : ', e);
-    console.log(e);
     return res.status(404).json({
       status: 'error',
       message: 'Fragment not found or access denied',
