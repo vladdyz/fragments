@@ -7,8 +7,6 @@
 # DEPENDENCIES
 ###################################################################################################
 
-# Using Alpine for smallest possible Linux distro, original node:22.19.0 docker images are ~1.2GB!
-# Version Specific and SHA digest pinned using official Alpine Linux package
 FROM node:22.19.0@sha256:afff6d8c97964a438d2e6a9c96509367e45d8bf93f790ad561a1eaea926303d9 AS dependencies
 
 LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca"
@@ -40,7 +38,8 @@ RUN npm ci --production
 # PRODUCTION
 ####################################################
 
-# Using the same node and alpine version in both stages to avoid and compatibility issues
+# Using Alpine for smallest possible Linux distro, original node:22.19.0 docker images are ~1.2GB!
+# Version Specific and SHA digest pinned using official Alpine Linux package
 FROM node:22.19.0-alpine3.22.2@sha256:704b199e36b5c1bc505da773f742299dc1ee5a4c70b86d1eb406c334f63253c6
 
 LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca"
