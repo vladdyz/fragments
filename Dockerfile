@@ -62,7 +62,7 @@ COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
-RUN apk add --no-cache curl tini
+RUN apk add --no-cache curl=8.16.0 tini=v0.19.0
 
 USER node 
 
