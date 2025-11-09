@@ -82,4 +82,4 @@ ENTRYPOINT ["/sbin/tini", "--"]
 
 
 # Start the container by running our server
-CMD ["npm", "start"]
+CMD ["node", "src/index.js"]
