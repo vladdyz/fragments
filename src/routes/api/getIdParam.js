@@ -5,6 +5,10 @@ const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const path = require('path');
 
+// v 0.7 - Added support for markdown to HTML conversion
+const MarkdownIt = require('markdown-it');
+const md = new MarkdownIt();
+
 module.exports = async (req, res) => {
   try {
     const id = req.params.id; // req params is an object with an id key, NOT a string!
@@ -54,9 +58,17 @@ module.exports = async (req, res) => {
       logger.info('Returning existing fragment data using its default type');
       res.set('Content-Type', fragment.type);
       return res.status(200).send(data);
+      // Markdown -> HTML support
+    } else if (idParamExt === '.html' && fragment.type === 'text/markdown') {
+      // Using a markdown parser, render the data as an HTML string instead
+      logger.info(`Converting a Markdown fragment ${fragmentId} to HTML`);
+      const html = md.render(data.toString());
+      res.set('Content-Type', 'text/html');
+      return res.status(200).send(html);
     } else {
+      // All other extensions just return as-is
       logger.warn(
-        'Only plain text fragments are currently supported, conversion implementation is pending'
+        'Only markdown to HTML is supported, additional conversion implementation is pending'
       );
       logger.info('Returning existing fragment data using its specified plain-text extension');
       // this will be different later, but for now the returns are the same
@@ -66,8 +78,8 @@ module.exports = async (req, res) => {
   } catch (e) {
     // if something goes wrong, also return a 404 (since we can't find a fragment) but log the error
     // this will be hit if fragment.byId can't resolve the promise as it will throw an error
-    logger.error("Unable to retrieve fragment data by id, most likely it doesn't exist");
-    logger.debug('Unexpected error occurred during GET src/routes/api/getIdParam : ', e);
+    logger.warn("Unable to retrieve fragment data by id, most likely it doesn't exist");
+    logger.debug('An error occurred during GET src/routes/api/getIdParam : ', e);
     return res.status(404).json({
       status: 'error',
       message: 'Fragment not found',

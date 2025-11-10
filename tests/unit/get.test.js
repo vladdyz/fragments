@@ -172,4 +172,36 @@ describe('GET /v1/fragments/:id', () => {
       .auth('kittens@email.com', 'drowssap');
     expect(req.statusCode).toBe(404);
   });
+  test('Convert a markdown fragment into HTML', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('kittens@email.com', 'drowssap')
+      .set('Content-Type', 'text/markdown')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}.html`)
+      .auth('kittens@email.com', 'drowssap');
+    expect(req.statusCode).toBe(200);
+    // this conversion returns only raw fragment data, need to check the content headers to corroborate it with RegEx
+    expect(req.headers['content-type']).toMatch(/text\/html/);
+    // to make extra sure its the correct fragment rendered as HTML, check its text contents
+    expect(req.text).toContain('<p>I love coffee</p>');
+  });
+  test('Converting other formats (not yet supported) should return original created type', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('kittens@email.com', 'drowssap')
+      .set('Content-Type', 'text/csv')
+      .send('A,B,C,D');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}.html`)
+      .auth('kittens@email.com', 'drowssap');
+    expect(req.statusCode).toBe(200);
+    // this conversion returns only raw fragment data, need to check the content headers to corroborate it with RegEx
+    expect(req.headers['content-type']).toMatch(/text\/csv/);
+    // to make extra sure its the same fragment, check its text contents
+    expect(req.text).toContain('A,B,C,D');
+  });
 });
