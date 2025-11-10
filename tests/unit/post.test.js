@@ -92,4 +92,46 @@ describe('POST /fragments tests', () => {
       .send(reallyBigString);
     expect(res.statusCode).toBe(413);
   });
+
+  test('Post a Markdown fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('Hello World');
+    const fragment = res.body.fragment;
+    const isSaved = await Fragment.byId(fragment.ownerId, fragment.id);
+    expect(isSaved).toBeDefined();
+    expect(isSaved.isText).toBe(true);
+    expect(isSaved.size).toBe(11);
+    expect(isSaved.type).toBe('text/markdown');
+  });
+
+  test('Post HTML fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/html')
+      .send('Hello World');
+    const fragment = res.body.fragment;
+    const isSaved = await Fragment.byId(fragment.ownerId, fragment.id);
+    expect(isSaved).toBeDefined();
+    expect(isSaved.isText).toBe(true);
+    expect(isSaved.size).toBe(11);
+    expect(isSaved.type).toBe('text/html');
+  });
+
+  test('A JSON fragment should not be a text fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/json')
+      .send('Hello World');
+    const fragment = res.body.fragment;
+    const isSaved = await Fragment.byId(fragment.ownerId, fragment.id);
+    expect(isSaved).toBeDefined();
+    expect(isSaved.isText).toBe(false);
+    expect(isSaved.size).toBe(11);
+    expect(isSaved.type).toBe('application/json');
+  });
 });

@@ -22,11 +22,7 @@ module.exports = async (req, res) => {
     const fragment = await Fragment.byId(req.user, fragmentId);
 
     // if the fragment does not exist, return HTTP code 404 not found
-    if (!fragment)
-      return res.status(404).json({
-        status: 'error',
-        message: `Fragment ${id} not found`,
-      });
+    // byId will throw an error, so this is handled in the catch block
 
     /**
      * If the id includes an optional extension (e.g., .txt or .png), the server attempts to convert the fragment to the type associated
@@ -69,11 +65,12 @@ module.exports = async (req, res) => {
     }
   } catch (e) {
     // if something goes wrong, also return a 404 (since we can't find a fragment) but log the error
-    logger.error('Unable to retrieve fragment data by id');
+    // this will be hit if fragment.byId can't resolve the promise as it will throw an error
+    logger.error("Unable to retrieve fragment data by id, most likely it doesn't exist");
     logger.debug('Unexpected error occurred during GET src/routes/api/getIdParam : ', e);
     return res.status(404).json({
       status: 'error',
-      message: 'Fragment not found or access denied',
+      message: 'Fragment not found',
     });
   }
 };

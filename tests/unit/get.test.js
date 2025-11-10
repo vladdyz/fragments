@@ -134,4 +134,42 @@ describe('GET /v1/fragments/:id', () => {
       .auth('testaccount1@email.com', 'password1');
     expect(req.statusCode).toBe(404);
   });
+  test('Return fragment metadata created by the current user through its ID', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}/info`)
+      .auth('testaccount1@email.com', 'password1');
+    expect(req.statusCode).toBe(200);
+    expect(req.body.status).toBe('ok');
+    expect(req.body.fragment).toHaveProperty('size', 13);
+  });
+  test('Return fragment metadata for unauthorized user should fail', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}/info`)
+      .auth('invalidaccount@email.com', '123');
+    expect(req.statusCode).toBe(401);
+  });
+  test('Return fragment metadata for nonexisting fragment should 404', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('I love coffee');
+    const fragment = res.body.fragment;
+    const req = await request(app)
+      .get(`/v1/fragments/${fragment.id}/info`)
+      .auth('kittens@email.com', 'drowssap');
+    expect(req.statusCode).toBe(404);
+  });
 });
