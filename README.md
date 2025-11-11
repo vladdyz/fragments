@@ -97,6 +97,10 @@ Loads environmental variables into process.env for use throughout this app
 
 Node.js package for HTTP basic and digest access authentication & the Passport.js integration. Used with the htpasswd utility. Tests basic user authentication without the need to overcomplicate the test setup with Cognito User Pools and Authentication UI/domains. Uses the hardcoded test accounts within .htpasswd instead.
 
+### Markdown-It
+
+Supports conversion of Markdown (.MD) fragments (currently only to HTML) via the :id.ext path params and file extension (e.g. use the id of a Markdown fragment and append HTML)
+
 ## Development Dependencies
 
 ### ESLint
@@ -156,7 +160,7 @@ Defines what successful & unsuccessful should look like for testing purposes
 ### API /
 
 The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js).
-The GET route now supports params (e.g. /v1/fragments/{id}) to return a specific plain-text fragment, provided the user is authenticated and the owner of the fragment.
+The GET route now supports params (e.g. /v1/fragments/{id}) to return a specific text-based (or JSON) fragment, provided the user is authenticated and the owner of the fragment. Appending /info allows metadata retrieval instead.
 
 ### Model /
 
@@ -165,3 +169,11 @@ Defines the fragment data model (Fragment.js) and associated methods (read/write
 ### Tests /
 
 The files in this directory are specifically test suites & cases for project code coverage, to validate that the code pushed to main is working as expected. These are also integrated into the CI pipeline along with ESLint - a commit will fail if it does not pass one or more of these tests!
+
+### ci/cd.yml
+
+Configuration for CI/CD. Upon successful completion of all jobs on a push the following takes place:
+
+- Linting and Unit Testing is performed concurrently on the files
+- A Docker image of the Fragments API server is built and pushed to the fragments repository on Docker Hub
+- If a new version tag is detected and the CI successfully passes, the Fragments docker image is pushed to the Amazon Elastic Container Registry (secrets must be updated accordingly)
