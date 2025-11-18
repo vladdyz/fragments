@@ -28,7 +28,7 @@ describe('POST /fragments tests', () => {
       .set('Content-Type', 'application/exe')
       .send('test');
     expect(res.statusCode).toBe(415);
-    expect(res.body.message).toBe('Invalid unsupported type');
+    expect(res.body.error.message).toBe('Invalid unsupported type');
   });
 
   test('Response includes all properties (id, ownerId, created, updated, size, type) with correct values', async () => {
