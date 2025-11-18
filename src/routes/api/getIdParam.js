@@ -82,7 +82,10 @@ module.exports = async (req, res) => {
     logger.debug('An error occurred during GET src/routes/api/getIdParam : ', e);
     return res.status(404).json({
       status: 'error',
-      message: 'Fragment not found',
+      error: {
+        message: 'Fragment not found',
+        code: 404,
+      },
     });
   }
 };

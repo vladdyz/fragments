@@ -25,7 +25,10 @@ module.exports = async (req, res) => {
     logger.debug('An error occurred during GET src/routes/api/getInfo : ', e);
     res.status(404).json({
       status: 'error',
-      message: 'Fragment metadata not found',
+      error: {
+        message: 'Fragment metadata not found',
+        code: 404,
+      },
     });
   }
 };

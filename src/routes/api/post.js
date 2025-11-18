@@ -43,10 +43,20 @@ module.exports = async (req, res) => {
       logger.debug('Content type: ', req.get('Content-Type'));
       res.status(415).json({
         status: 'error',
-        message: 'Invalid unsupported type',
+        error: {
+          code: 415,
+          message: 'Invalid unsupported type',
+        },
       });
     }
   } catch (err) {
     logger.error(`Unexpected error occurred (you shouldn't be seeing this!): ${err}`);
+    res.status(500).json({
+      status: 'error',
+      error: {
+        code: 500,
+        message: `Unexpected error occurred during POST: ${err}`,
+      },
+    });
   }
 };

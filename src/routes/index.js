@@ -35,4 +35,12 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/debug/env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    HTPASSWD_FILE: process.env.HTPASSWD_FILE,
+    AWS_COGNITO_POOL_ID: process.env.AWS_COGNITO_POOL_ID,
+  });
+});
+
 module.exports = router;
