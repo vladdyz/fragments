@@ -1,4 +1,4 @@
-# docker-compose.yml
+# docker-compose.yml for Fragments microservice
 
 services:
   # Fragments microservice API server

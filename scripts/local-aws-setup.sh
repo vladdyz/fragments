@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Setup steps for working with LocalStack and DynamoDB local instead of AWS.
-# Assumes aws cli is installed and LocalStack and DynamoDB local are running.
+# Assumes aws cli is installed and LocalStack and DynamoDB local are running. 
 
 # Setup AWS environment variables
 echo "Setting AWS environment variables for LocalStack"
