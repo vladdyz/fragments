@@ -65,7 +65,8 @@ COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
 # Specific packages are pinned for this alpine version, but this may break later if these get rotated out
 RUN apk add --no-cache curl=8.14.1-r2 tini=0.19.0-r3
 
-USER node 
+# Removed in V0.7.6 as we need elevated privileges for AWS
+# USER node 
 
 # The Docker container needs to expose the port to run the health check on localhost
 EXPOSE 8080 
