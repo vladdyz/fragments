@@ -101,6 +101,10 @@ Node.js package for HTTP basic and digest access authentication & the Passport.j
 
 Supports conversion of Markdown (.MD) fragments (currently only to HTML) via the :id.ext path params and file extension (e.g. use the id of a Markdown fragment and append HTML)
 
+### AWS-SDK/client-s3
+
+S3 AWS SDK for JavaScript to work with the Amazon S3 bucket for storing fragments, replacing the previous in-memory database for back-end storage in Fragments 0.7.x versions and below.
+
 ## Development Dependencies
 
 ### ESLint
@@ -159,7 +163,7 @@ Defines what successful & unsuccessful should look like for testing purposes
 
 ### API /
 
-The main entry-point for the v1 version of the fragments API, currently includes GET and POST routes to store and retrieve plain-text fragments (Get.js/Post.js).
+The main entry-point for the v1 version of the fragments API, currently includes GET, POST, and DELETE routes to store, retrieve, and remove fragments (Get.js/Post.js/Delete.js).
 The GET route now supports params (e.g. /v1/fragments/{id}) to return a specific text-based (or JSON) fragment, provided the user is authenticated and the owner of the fragment. Appending /info allows metadata retrieval instead.
 
 ### Model /
