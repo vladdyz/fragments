@@ -93,7 +93,7 @@ jobs:
             AWS_COGNITO_CLIENT_ID=${{secrets.AWS_COGNITO_CLIENT_ID}}
             API_URL=http://fragments-lb-2095915723.us-east-1.elb.amazonaws.com/
             AWS_S3_BUCKET_NAME=vladislav.zolotukhin-fragments
-            AWS-REGION=us-east-1
+            AWS_REGION=us-east-1
 
         # This step can take a long time (5-10 min+) as deploying updated task definitions
         # to ECS cluster requires shutting down old tasks, provision new instances, pull image, start etc
