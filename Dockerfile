@@ -69,7 +69,7 @@ RUN apk add --no-cache curl=8.14.1-r2 tini=0.19.0-r3
 # USER node 
 
 # The Docker container needs to expose the port to run the health check on localhost
-EXPOSE 80
+EXPOSE 8080
 
 # Every 30 minutes run the healthcheck to make sure the server is responding
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
