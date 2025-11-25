@@ -27,6 +27,10 @@
         {
           "name": "AWS_S3_BUCKET_NAME",
           "value": "vladislav.zolotukhin-fragments"
+        },
+        {
+          "name": "AWS-REGION",
+          "value": "us-east-1"
         }
       ],
       "environmentFiles": [],
