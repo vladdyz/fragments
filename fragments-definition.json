@@ -104,7 +104,7 @@
     "operatingSystemFamily": "LINUX"
   },
   "status": "ACTIVE",
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:471112623660:task-definition/fragments-task:3",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:471112623660:task-definition/fragments-task:8",
   "taskRoleArn": "arn:aws:iam::471112623660:role/LabRole",
   "volumes": [],
   "tags": []
