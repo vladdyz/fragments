@@ -54,11 +54,16 @@ COPY --from=dependencies /app/node_modules ./node_modules
 # Use the pre-defined non-privileged "node" user and set the ownership for the source code
 
 # Copy source files (src) to /app/src/ and the package* files
-COPY --chown=node:node ./src ./src
-COPY --chown=node:node package*.json ./
+# I set user permissions to node hser (user node and chown=node:node when copying)
+# This caused a lot of problems for AWS
+#COPY --chown=node:node ./src ./src
+#COPY --chown=node:node package*.json ./
+COPY ./src ./src
+COPY package*.json ./ 
 
 # Copy our HTPASSWD file
-COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
+#COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
+COPY ./tests/htpasswd ./tests/.htpasswd
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
