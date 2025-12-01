@@ -21,6 +21,7 @@ fragment1_id: jsonpath "$.fragment.id"
 
 # GET the fragment metadata you just created using the url as an authorized user.
 # Note: don't GET the data for this, already tested in other integration test files
+# Note 2: Append /info to these to hit the route GET v1/fragments/:id/info etc.
 GET {{fragment1_url}}/info 
 [BasicAuth]
 testaccount1@email.com:password1
