@@ -63,7 +63,7 @@ COPY package*.json ./
 
 # Copy our HTPASSWD file
 #COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
-COPY ./tests/htpasswd ./tests/.htpasswd
+COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
