@@ -5,7 +5,7 @@ const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aw
 const logger = require('../../../logger');
 const ddbDocClient = require('./ddbDocClient');
 // XXX: temporary use of memory-db until we add DynamoDB
-// Deprecated as of v1.0.0
+// Deprecated as of v0.10.0
 //const MemoryDB = require('../memory/memory-db');
 //const metadata = new MemoryDB();
 const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');

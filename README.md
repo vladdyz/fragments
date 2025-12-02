@@ -45,6 +45,10 @@ To run specific individual test suites, append the name of the file to the comma
 
 Same as above, except responsive to changes in realtime by watching the files instead of terminating immediately after the testing concludes. Re-runs the tests when a change is detected. Also works with individual test suites.
 
+### nmp test:integration
+
+Runs the integration test suite, simulating AWS & DynamoDB locally. Must first set up environment (docker compose up --build -d) and run the local-aws-setup.sh script in Git Bash. This test suite has been integrated into CI as of v0.10.0.
+
 ### npm run coverage
 
 In addition to running tests, also collects detailed coverage information. Displays the files that were included in the testing, providing a breakdown of the statements, branches, functions, and lines covered by the tests. Useful to identify which parts of the code aren't included in the tests by their line #s. Provides an overall coverage % of the breakdowns.
