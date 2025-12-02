@@ -1,7 +1,6 @@
 # Integration test for AWS S3 and Dynamo DB (src/mode/data/aws/*) fragments additions in Lab 10
 # POST a fragment to our fragments microservice, requires authentication
 POST http://localhost:8080/v1/fragments
-# We're sending a plain text fragment
 Content-Type: application/json
 [BasicAuth]
 testaccount1@email.com:password1
