@@ -8,6 +8,8 @@ const path = require('path');
 // v 0.7 - Added support for markdown to HTML conversion
 const MarkdownIt = require('markdown-it');
 const md = new MarkdownIt();
+// v 0.10 - Added support for image conversion
+const sharp = require('sharp');
 
 module.exports = async (req, res) => {
   try {
@@ -53,7 +55,25 @@ module.exports = async (req, res) => {
 
     const data = await fragment.getData();
 
-    // TO-DO: Add conversion to other types later, just plain text is supported for now
+    // tables of currently supported types and conversions
+    const extensionToMime = {
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.webp': 'image/webp',
+      '.gif': 'image/gif',
+      '.avif': 'image/avif',
+      '.txt': 'text/plain',
+      '.html': 'text/html',
+      '.md': 'text/markdown',
+      '.csv': 'text/csv',
+      '.json': 'application.json',
+      '.yml': 'application/yaml',
+    };
+
+    const imageTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'];
+
+    // TO-DO: Add conversion to other types later
     if (!idParamExt) {
       logger.info('Returning existing fragment data using its default type');
       res.set('Content-Type', fragment.type);
@@ -65,6 +85,57 @@ module.exports = async (req, res) => {
       const html = md.render(data.toString());
       res.set('Content-Type', 'text/html');
       return res.status(200).send(html);
+      // image conversion support
+    } else if (idParamExt && imageTypes.includes(fragment.type)) {
+      const outMime = extensionToMime[idParamExt];
+      // invalid conversion request
+      if (!imageTypes.includes(outMime)) {
+        logger.warn(
+          `Cannot convert image fragment ${fragmentId} from ${fragment.type} to ${idParamExt}`
+        );
+        return res.status(415).json({
+          status: 'error',
+          error: {
+            message: `Unsupported image conversion to ${idParamExt}`,
+            code: 415,
+          },
+        });
+      }
+
+      logger.info(`Converting image fragment ${fragmentId} from ${fragment.type} to ${outMime}`);
+
+      try {
+        let converted;
+        switch (idParamExt) {
+          case '.png':
+            converted = await sharp(data).png().toBuffer();
+            break;
+          case '.jpg':
+          case '.jpeg':
+            converted = await sharp(data).jpeg().toBuffer();
+            break;
+          case '.webp':
+            converted = await sharp(data).webp().toBuffer();
+            break;
+          case '.gif':
+            converted = await sharp(data).gif().toBuffer();
+            break;
+          case '.avif':
+            converted = await sharp(data).avif().toBuffer();
+            break;
+          default:
+            throw new Error(`Unhandled extension ${idParamExt}`);
+        }
+
+        res.set('Content-Type', outMime);
+        return res.status(200).send(converted);
+      } catch (err) {
+        logger.error('Sharp image conversion failed:', err);
+        return res.status(500).json({
+          status: 'error',
+          error: { message: 'Image conversion failed', code: 500 },
+        });
+      }
     } else {
       // All other extensions just return as-is
       logger.warn(
