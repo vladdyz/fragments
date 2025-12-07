@@ -61,9 +61,8 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY ./src ./src
 COPY package*.json ./ 
 
-# Testing artifacts should not be in production
 #COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
-# COPY ./tests/.htpasswd ./tests/.htpasswd 
+COPY ./tests/.htpasswd ./tests/.htpasswd 
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
