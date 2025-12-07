@@ -42,4 +42,7 @@ router.post('/fragments', rawBody(), require('./post'));
 // delete a fragment by an authorized user using its id
 router.delete('/fragments/:id', require('./delete'));
 
+// Update (i.e. replace) an existing fragment
+router.put('/fragments/:id', rawBody(), require('./put'));
+
 module.exports = router;
