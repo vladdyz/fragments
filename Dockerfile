@@ -9,7 +9,7 @@
 
 FROM node:22.19.0@sha256:afff6d8c97964a438d2e6a9c96509367e45d8bf93f790ad561a1eaea926303d9 AS dependencies
 
-LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca"
+LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca>"
 LABEL description="Fragments node.js microservice dependencies"
 
 # Set environment variable port to use 8080 for the service
@@ -42,7 +42,7 @@ RUN npm ci --production
 # Version Specific and SHA digest pinned using official Alpine Linux package
 FROM node:22.19.0-alpine3.22.2@sha256:704b199e36b5c1bc505da773f742299dc1ee5a4c70b86d1eb406c334f63253c6
 
-LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca"
+LABEL maintainer="Vladislav Zolotukhin <vzolotukhin@myseneca.ca>"
 LABEL description="Fragments node.js microservice"
 
 WORKDIR /app/
@@ -54,16 +54,16 @@ COPY --from=dependencies /app/node_modules ./node_modules
 # Use the pre-defined non-privileged "node" user and set the ownership for the source code
 
 # Copy source files (src) to /app/src/ and the package* files
-# I set user permissions to node hser (user node and chown=node:node when copying)
+# I set user permissions to node user (user node and chown=node:node when copying)
 # This caused a lot of problems for AWS
 #COPY --chown=node:node ./src ./src
 #COPY --chown=node:node package*.json ./
 COPY ./src ./src
 COPY package*.json ./ 
 
-# Copy our HTPASSWD file
+# Testing artifacts should not be in production
 #COPY --chown=node:node ./tests/.htpasswd ./tests/.htpasswd
-COPY ./tests/.htpasswd ./tests/.htpasswd
+# COPY ./tests/.htpasswd ./tests/.htpasswd 
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one

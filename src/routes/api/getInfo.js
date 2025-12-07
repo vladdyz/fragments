@@ -6,7 +6,7 @@ const { Fragment } = require('../../model/fragment');
 module.exports = async (req, res) => {
   try {
     const id = req.params.id; // req params is an object with an id key, NOT a string!
-    logger.debug(`GET /v1/fragments/${id}/info route triggered by: ${req.user})`);
+    logger.debug(`GET /v1/fragments/${id}/info route triggered by: ${req.user}`);
 
     // Retrieve fragment by its ownerId and id (users shouldn't access metadata from fragments they didn't make)
     const fragment = await Fragment.byId(req.user, id);

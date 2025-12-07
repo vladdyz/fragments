@@ -50,8 +50,12 @@ class Fragment {
     else
       return Promise.resolve(
         fragments.map((fragment) => {
-          const fragmentObj = JSON.parse(fragment);
-          return new Fragment(fragmentObj);
+          if (typeof fragment === 'string') {
+            const fragmentObj = JSON.parse(fragment);
+            return new Fragment(fragmentObj);
+          } else {
+            return fragment;
+          }
         })
       );
 
