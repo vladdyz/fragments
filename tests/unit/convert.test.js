@@ -103,6 +103,22 @@ describe('Image conversion tests', () => {
     expect(converted.statusCode).toBe(200);
   });
 
+  test('Convert PNG to PNG', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'image/png')
+      .send(imgBuffer);
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.png`)
+      .auth('testaccount1@email.com', 'password1');
+
+    expect(converted.statusCode).toBe(200);
+  });
+
   test('Unauthorized user cannot convert another users image fragment', async () => {
     const res = await request(app)
       .post('/v1/fragments')
@@ -173,7 +189,7 @@ describe('Application (JSON/YAML) tests', () => {
     expect(converted.statusCode).toBe(200);
     expect(converted.headers['content-type']).toBe('application/json; charset=utf-8');
   });
-  test('Convert YML to unsupported type (Markdown) should return the original fragment', async () => {
+  test('Convert YML to unsupported type (Markdown) should return 415 Unsupported Type', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
@@ -188,8 +204,43 @@ describe('Application (JSON/YAML) tests', () => {
       .get(`/v1/fragments/${id}.md`)
       .auth('testaccount1@email.com', 'password1');
 
+    expect(converted.statusCode).toBe(415);
+  });
+  test('Convert YML to Text', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/yaml')
+      .send('text');
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.txt`)
+      .auth('testaccount1@email.com', 'password1');
+    expect(converted.headers['content-type']).toBe('text/plain; charset=utf-8');
+
     expect(converted.statusCode).toBe(200);
-    expect(converted.headers['content-type']).toBe('application/yaml');
+  });
+  test('Convert JSON to TXT', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/json')
+      .send('{"text": "example"}');
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.txt`)
+      .auth('testaccount1@email.com', 'password1');
+
+    expect(converted.statusCode).toBe(200);
+    expect(converted.headers['content-type']).toBe('text/plain; charset=utf-8');
   });
 });
 
@@ -252,7 +303,7 @@ describe('CSV conversions (json, txt & csv)', () => {
     expect(converted.statusCode).toBe(200);
     expect(converted.headers['content-type']).toBe('text/csv; charset=utf-8');
   });
-  test('Convert CSV to unsupported type should return the original fragment', async () => {
+  test('Convert CSV to unsupported type should return a 415 unsupported response', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
@@ -267,7 +318,6 @@ describe('CSV conversions (json, txt & csv)', () => {
       .get(`/v1/fragments/${id}.png`)
       .auth('testaccount1@email.com', 'password1');
 
-    expect(converted.statusCode).toBe(200);
-    expect(converted.headers['content-type']).toBe('text/csv; charset=utf-8');
+    expect(converted.statusCode).toBe(415);
   });
 });

@@ -4,22 +4,11 @@ const s3Client = require('./s3Client');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const logger = require('../../../logger');
 const ddbDocClient = require('./ddbDocClient');
-// XXX: temporary use of memory-db until we add DynamoDB
 // Deprecated as of v0.10.0
-//const MemoryDB = require('../memory/memory-db');
-//const metadata = new MemoryDB();
+// const MemoryDB = require('../memory/memory-db');
+// const metadata = new MemoryDB();
 const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
-// Write a fragment's metadata to memory db. Returns a Promise<void>
-// Memory DB for prior testing only!
-/*
- *function writeFragment(fragment) {
- * // Simulate db/network serialization of the value, storing only JSON representation.
- * // This is important because it's how things will work later with AWS data stores.
- * const serialized = JSON.stringify(fragment);
- * return metadata.put(fragment.ownerId, fragment.id, serialized);
- *}
- */
 // Writes a fragment to DynamoDB. Returns a Promise.
 function writeFragment(fragment) {
   // Configure our PUT params, with the name of the table and item (attributes and keys)
@@ -39,17 +28,6 @@ function writeFragment(fragment) {
   }
 }
 
-// Read a fragment's metadata from memory db. Returns a Promise<Object>
-// Memory DB for testing purposes only!
-/*
- *async function readFragment(ownerId, id) {
- * // NOTE: this data will be raw JSON, we need to turn it back into an Object.
- * // You'll need to take care of converting this back into a Fragment instance
- * // higher up in the callstack.
- * const serialized = await metadata.get(ownerId, id);
- * return typeof serialized === 'string' ? JSON.parse(serialized) : serialized;
- *}
- */
 // Reads a fragment from DynamoDB. Returns a Promise<fragment|undefined>
 async function readFragment(ownerId, id) {
   // Configure our GET params, with the name of the table and key (partition key + sort key)
@@ -73,21 +51,6 @@ async function readFragment(ownerId, id) {
   }
 }
 
-// Get a list of fragment ids/objects for the given user from memory db. Returns a Promise
-// Memory DB for testing purposes only!
-/*
- *async function listFragments(ownerId, expand = false) {
- * const fragments = await metadata.query(ownerId);
- *
- * // If we don't get anything back, or are supposed to give expanded fragments, return
- * if (expand || !fragments) {
- *   return fragments;
- * }
- *
- * // Otherwise, map to only send back the ids
- * return fragments.map((fragment) => JSON.parse(fragment).id);
- *}
- */
 // Get a list of fragments, either ids-only, or full Objects, for the given user.
 // Returns a Promise<Array<Fragment>|Array<string>|undefined>
 async function listFragments(ownerId, expand = false) {
@@ -199,29 +162,6 @@ async function readFragmentData(ownerId, id) {
   }
 }
 
-// Delete a fragment's metadata and data from memory db. Returns a Promise
-// Memory DB for testing purposes only!
-/*
- *async function deleteFragment(ownerId, id) {
- * const params = {
- *   Bucket: process.env.AWS_S3_BUCKET_NAME,
- *   Key: `${ownerId}/${id}`,
- * };
- * try {
- *   // Delete metadata - this is still using memory-db until DynamoDB is added
- *   metadata.del(ownerId, id);
- *   // Delete data using DeleteObject command
- *   // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/s3/command/DeleteObjectCommand/
- *
- *   const command = new DeleteObjectCommand(params);
- *   const response = await s3Client.send(command);
- *   return streamToBuffer(response.Body);
- * } catch (err) {
- *   const { Bucket, Key } = params;
- *   logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
- * }
- *}
- */
 // Delete a fragment's metadata and data from Dynamo db. Returns a Promise
 async function deleteFragment(ownerId, id) {
   const paramsMetadata = {
@@ -244,8 +184,8 @@ async function deleteFragment(ownerId, id) {
 
     const command = new DeleteObjectCommand(params);
     // this is wrong! memoryDB returned a body but Dynamo DB does not! will throw exception when run
-    //const response = await s3Client.send(command);
-    //return streamToBuffer(response.Body);
+    // const response = await s3Client.send(command);
+    // return streamToBuffer(response.Body);
     await s3Client.send(command);
     return;
   } catch (err) {

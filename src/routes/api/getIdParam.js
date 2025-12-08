@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     /**
      * If the id includes an optional extension (e.g., .txt or .png), the server attempts to convert the fragment to the type associated
      * with that extension. Otherwise the successful response returns the raw fragment data using the type specified when created
-     * (e.g., text/plain or image/png) as its Content-Type. Right now only plain-text is supported, but this is definitely a TO-DO for later
+     * (e.g., text/plain or image/png) as its Content-Type.
      *
      * ex: GET v1/fragments/s20acneaj35aD.png -> convert to png, otherwise use fragment.type specified during its creation
      *
@@ -55,10 +55,9 @@ module.exports = async (req, res) => {
      */
 
     // Retrieve the fragment's raw data buffer
-
     const data = await fragment.getData();
 
-    // tables of currently supported types and conversions
+    // tables of currently supported types
     const extensionToMime = {
       '.png': 'image/png',
       '.jpg': 'image/jpeg',
@@ -77,7 +76,7 @@ module.exports = async (req, res) => {
 
     const imageTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'];
 
-    // TO-DO: Add conversion to other types later
+    // Supported conversion types as of v1.0.0
     if (!idParamExt) {
       logger.info('Returning existing fragment data using its default type');
       res.set('Content-Type', fragment.type);
@@ -89,7 +88,7 @@ module.exports = async (req, res) => {
       const html = md.render(data.toString());
       res.set('Content-Type', 'text/html');
       return res.status(200).send(html);
-      // YAML - JSON and vice versa
+      // YAML - JSON
     } else if (
       (fragment.type === 'application/json' &&
         (idParamExt === '.yaml' ||
@@ -110,18 +109,27 @@ module.exports = async (req, res) => {
         let converted;
 
         if (fragment.type === 'application/json') {
-          const obj = JSON.parse(asText);
-          // dump serializes object as YAML document - dump(object[,options])
-          converted = idParamExt === '.json' ? JSON.stringify(obj, null, 2) : yaml.dump(obj);
+          if (idParamExt == '.yaml' || idParamExt == '.yml') {
+            const obj = JSON.parse(asText);
+            // dump serializes object as YAML document - dump(object[,options])
+            converted = idParamExt === '.json' ? JSON.stringify(obj, null, 2) : yaml.dump(obj);
+          } else {
+            // json to txt or json to json
+            converted = data;
+          }
         } else if (fragment.type === 'application/yaml') {
-          // load parses strings as single YAML document
-          // Returns: plain obj, string, num, null, or undefined.
-          // load(string[,options])
-          const obj = yaml.load(asText);
-          converted =
-            idParamExt === '.yaml' || idParamExt === '.yml'
-              ? yaml.dump(obj)
-              : JSON.stringify(obj, null, 2);
+          if (idParamExt == '.json') {
+            // load parses strings as single YAML document
+            // Returns: plain obj, string, num, null, or undefined.
+            // load(string[,options])
+            const obj = yaml.load(asText);
+            converted =
+              idParamExt === '.yaml' || idParamExt === '.yml'
+                ? yaml.dump(obj)
+                : JSON.stringify(obj, null, 2);
+          } else {
+            converted = data;
+          }
         }
         res.set('Content-Type', outMime);
         return res.status(200).send(converted);
@@ -219,13 +227,26 @@ module.exports = async (req, res) => {
       }
     } else {
       // All other extensions just return as-is
+      // Fragments-UI also references the conversion table to present the user a list of valid extensions to prevent direct access
+      // In case this is somehow bypassed (e.g. curl with -H bearer token) it can trigger this block
       logger.warn(
         'Failed to hit conversion blocks. Additional conversion implementation is pending'
       );
-      logger.info('Returning existing fragment data using its specified plain-text extension');
+      // Original implementation had the conversion return the file as-is if no supported conversion could take place
+      // Refactored for version 1.0.0 to return 415 Unsupported code as per spec. 4.5
+      /*
+      logger.info('Returning existing fragment data using its specified extension');
       // this will be different later, but for now the returns are the same
       res.set('Content-Type', fragment.type);
       return res.status(200).send(data);
+      */
+      return res.status(415).json({
+        status: 'error',
+        error: {
+          message: `Unsupported type conversion to ${idParamExt} from ${fragment.type} `,
+          code: 415,
+        },
+      });
     }
   } catch (e) {
     // if something goes wrong, also return a 404 (since we can't find a fragment) but log the error

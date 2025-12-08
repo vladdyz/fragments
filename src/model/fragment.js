@@ -58,8 +58,6 @@ class Fragment {
           }
         })
       );
-
-    //else return Promise.resolve([JSON.parse(fragments)]);
   }
 
   /**
