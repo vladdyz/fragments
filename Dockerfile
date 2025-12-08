@@ -55,7 +55,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 
 # Copy source files (src) to /app/src/ and the package* files
 
-# I set user permissions to node user (USER node and chown=node:node when copying src, package* and .htpasswd)
+# I set permissions / ownership to node user (USER node / chown=node:node when copying src, package* and .htpasswd) to mitigate security risk
 # This caused a lot of problems for AWS and has been redacted, along with the removal of test artifacts from prod build (htpasswd)
 
 COPY package*.json ./ 
