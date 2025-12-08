@@ -66,8 +66,8 @@ COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
-# Specific packages are pinned for this alpine version, but this may break later if these get rotated out
-RUN apk add --no-cache curl=8.14.1-r2 tini=0.19.0-r3
+# Removed specific package pins for this alpine version as this may break later if these get rotated out
+RUN apk add --no-cache curl tini
 
 # Removed in V0.7.6 as we need elevated privileges for AWS
 # USER node 
