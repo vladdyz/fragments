@@ -12,6 +12,7 @@ const md = new MarkdownIt();
 const sharp = require('sharp');
 // v 0.10.3 - Added support for remaining content type conversions
 const yaml = require('js-yaml');
+const csv = require('csvtojson');
 
 module.exports = async (req, res) => {
   try {
@@ -131,6 +132,40 @@ module.exports = async (req, res) => {
           error: { message: 'Unsupported JSON/YAML conversion', code: 415 },
         });
       }
+      // CSV - using csvtojson v2.0
+    } else if (
+      fragment.type === 'text/csv' &&
+      (idParamExt === '.json' || idParamExt === '.txt' || idParamExt === '.csv')
+    ) {
+      const outMime = extensionToMime[idParamExt];
+      logger.info(`Converting fragment ${fragmentId} from ${fragment.type} to ${outMime}`);
+
+      try {
+        const asText = data.toString();
+        let converted;
+        // using the async/await function 'const jsonArray=await csv().fromFile(csvFilePath)'
+        const jsonArray = await csv().fromString(asText);
+        if (idParamExt === '.json') {
+          converted = JSON.stringify(jsonArray, null, 2);
+          res.set('Content-Type', outMime);
+        } else if (idParamExt === '.txt') {
+          // plain text version (prettified)
+          converted = JSON.stringify(jsonArray, null, 2);
+          res.set('Content-Type', outMime);
+        } else {
+          // just return the csv itself (csv to csv)
+          res.set('Content-Type', fragment.type);
+          converted = data;
+        }
+        return res.status(200).send(converted);
+      } catch (err) {
+        logger.warn('CSV/JSON conversion failed:', err);
+        return res.status(415).json({
+          status: 'error',
+          error: { message: 'Unsupported CSV conversion', code: 415 },
+        });
+      }
+
       // image conversion support
     } else if (idParamExt && imageTypes.includes(fragment.type)) {
       const outMime = extensionToMime[idParamExt];
@@ -185,7 +220,7 @@ module.exports = async (req, res) => {
     } else {
       // All other extensions just return as-is
       logger.warn(
-        'Only markdown to HTML is supported, additional conversion implementation is pending'
+        'Failed to hit conversion blocks. Additional conversion implementation is pending'
       );
       logger.info('Returning existing fragment data using its specified plain-text extension');
       // this will be different later, but for now the returns are the same
