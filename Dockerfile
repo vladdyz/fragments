@@ -55,15 +55,10 @@ COPY --from=dependencies /app/node_modules ./node_modules
 
 # Copy source files (src) to /app/src/ and the package* files
 
-# I set user permissions to node user (user node and chown=node:node when copying src, package* and .htpasswd)
-# This caused a lot of problems for AWS
-#COPY --chown=node:node ./src ./src
-#COPY --chown=node:node package*.json ./
-COPY ./src ./src
-COPY package*.json ./ 
+# I set user permissions to node user (USER node and chown=node:node when copying src, package* and .htpasswd)
+# This caused a lot of problems for AWS and has been redacted, along with the removal of test artifacts from prod build (htpasswd)
 
-# Test artifacts shouldn't be included in the production build
-# COPY ./tests/.htpasswd ./tests/.htpasswd 
+COPY package*.json ./ 
 
 # Alpine needs curl installed to run the healthcheck 
 # Also require tini to use as our init process so combine both these commands into one
