@@ -35,7 +35,7 @@ Why run this instead of npm start?
 
 ### npm test
 
-Runs testing using the jest module, note that this entails using separate environmental variable configuration. This is used to distinguish the authentication flow in the production environment (where it uses Cognito) from the testing environment (which uses hardcoded users in the .htpasswd file).
+Runs testing using the jest module, note that this entails using separate environmental variable configuration. This is used to distinguish the authentication flow in the production environment (where it uses Cognito) from the testing environment (which uses hardcoded users in the .htpasswd file). Note that the htpasswd file must store credentials in the format of email (as username) and hashed password as these are the expected parameters in the auth-middleware callback.
 
 The test suites are contained in the tests/\* directories, grouped accordingly (e.g. unit tests in the tests/unit folder, and so on). The nomenclature consists of the type of test, the word "test" and the file extension, delimited by dots. E.g. the 'response.test.js' test suite contains tests that expect success/error responses to be returned, the health.test.js suite contains tests to validate the health and connectivity of the app, etc.
 
