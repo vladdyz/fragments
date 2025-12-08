@@ -36,13 +36,13 @@ describe('Image conversion tests', () => {
 
   test('Convert PNG to JPG', async () => {
     // Upload original PNG
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     // Request conversion
     const converted = await request(app)
@@ -55,13 +55,13 @@ describe('Image conversion tests', () => {
   });
 
   test('Convert PNG to WebP', async () => {
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     const converted = await request(app)
       .get(`/v1/fragments/${id}.webp`)
@@ -72,13 +72,13 @@ describe('Image conversion tests', () => {
   });
 
   test('Convert PNG to GIF', async () => {
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     const converted = await request(app)
       .get(`/v1/fragments/${id}.gif`)
@@ -88,13 +88,13 @@ describe('Image conversion tests', () => {
   });
 
   test('Convert PNG to AVIF', async () => {
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     const converted = await request(app)
       .get(`/v1/fragments/${id}.avif`)
@@ -104,13 +104,13 @@ describe('Image conversion tests', () => {
   });
 
   test('Unauthorized user cannot convert another user’s image fragment', async () => {
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     const converted = await request(app)
       .get(`/v1/fragments/${id}.jpg`)
@@ -119,18 +119,74 @@ describe('Image conversion tests', () => {
     expect(converted.statusCode).toBe(404);
   });
   test('Attempting unsupported conversion returns 415', async () => {
-    const upload = await request(app)
+    const res = await request(app)
       .post('/v1/fragments')
       .auth('testaccount1@email.com', 'password1')
       .set('Content-Type', 'image/png')
       .send(imgBuffer);
 
-    const id = upload.body.fragment.id;
+    const id = res.body.fragment.id;
 
     const converted = await request(app)
       .get(`/v1/fragments/${id}.doc`)
       .auth('testaccount1@email.com', 'password1');
 
     expect(converted.statusCode).toBe(415);
+  });
+});
+
+describe('Application (JSON/YAML) tests', () => {
+  test('Convert JSON to YML', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/json')
+      .send('{"text": "example"}');
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.yaml`)
+      .auth('testaccount1@email.com', 'password1');
+
+    expect(converted.statusCode).toBe(200);
+  });
+
+  test('Convert YML to JSON', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/yaml')
+      .send('text');
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.json`)
+      .auth('testaccount1@email.com', 'password1');
+
+    expect(converted.statusCode).toBe(200);
+  });
+  test('Convert YML to unsupported type (Markdown) should return the original fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('testaccount1@email.com', 'password1')
+      .set('Content-Type', 'application/yaml')
+      .send('text');
+    expect(res.statusCode).toBe(201);
+    expect(res.body.status).toBe('ok');
+
+    const id = res.body.fragment.id;
+
+    const converted = await request(app)
+      .get(`/v1/fragments/${id}.md`)
+      .auth('testaccount1@email.com', 'password1');
+
+    expect(converted.statusCode).toBe(200);
+    expect(converted).toHaveProperty('type', 'application/yaml');
   });
 });

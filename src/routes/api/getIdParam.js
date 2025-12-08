@@ -10,6 +10,8 @@ const MarkdownIt = require('markdown-it');
 const md = new MarkdownIt();
 // v 0.10 - Added support for image conversion
 const sharp = require('sharp');
+// v 0.10.3 - Added support for remaining content type conversions
+const yaml = require('js-yaml');
 
 module.exports = async (req, res) => {
   try {
@@ -67,8 +69,9 @@ module.exports = async (req, res) => {
       '.html': 'text/html',
       '.md': 'text/markdown',
       '.csv': 'text/csv',
-      '.json': 'application.json',
+      '.json': 'application/json',
       '.yml': 'application/yaml',
+      '.yaml': 'application/yaml',
     };
 
     const imageTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'];
@@ -85,6 +88,49 @@ module.exports = async (req, res) => {
       const html = md.render(data.toString());
       res.set('Content-Type', 'text/html');
       return res.status(200).send(html);
+      // YAML - JSON and vice versa
+    } else if (
+      (fragment.type === 'application/json' &&
+        (idParamExt === '.yaml' ||
+          idParamExt === '.yml' ||
+          idParamExt === '.json' ||
+          idParamExt === '.txt')) ||
+      (fragment.type === 'application/yaml' &&
+        (idParamExt === '.json' ||
+          idParamExt === '.yaml' ||
+          idParamExt === '.yml' ||
+          idParamExt === '.txt'))
+    ) {
+      const outMime = extensionToMime[idParamExt];
+      logger.info(`Converting fragment ${fragmentId} from ${fragment.type} to ${outMime}`);
+      try {
+        const asText = data.toString();
+
+        let converted;
+
+        if (fragment.type === 'application/json') {
+          const obj = JSON.parse(asText);
+          // dump serializes object as YAML document - dump(object[,options])
+          converted = idParamExt === '.json' ? JSON.stringify(obj, null, 2) : yaml.dump(obj);
+        } else if (fragment.type === 'application/yaml') {
+          // load parses strings as single YAML document
+          // Returns: plain obj, string, num, null, or undefined.
+          // load(string[,options])
+          const obj = yaml.load(asText);
+          converted =
+            idParamExt === '.yaml' || idParamExt === '.yml'
+              ? yaml.dump(obj)
+              : JSON.stringify(obj, null, 2);
+        }
+        res.set('Content-Type', outMime);
+        return res.status(200).send(converted);
+      } catch (err) {
+        logger.warn('JSON/YAML conversion failed:', err);
+        return res.status(415).json({
+          status: 'error',
+          error: { message: 'Unsupported JSON/YAML conversion', code: 415 },
+        });
+      }
       // image conversion support
     } else if (idParamExt && imageTypes.includes(fragment.type)) {
       const outMime = extensionToMime[idParamExt];
