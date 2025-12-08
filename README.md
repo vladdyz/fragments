@@ -55,6 +55,10 @@ In addition to running tests, also collects detailed coverage information. Displ
 
 Also shows a much more elaborate web version of the report by opening the file coverage/lcov-report/index.html in the browser (the coverage/ directory will have been created when you ran the command above).
 
+### local-aws-setup.sh
+
+Simulates app AWS functionality by setting up LocalStack to mock S3 bucket storage and DynamoDB (metadata) for testing. Integral to verifying functionality of new features prior to push via integration test suites (we want to confirm everything works as it is expected to before putting the new code through the lengthy CI/CD processes and redeployment to AWS). Requires AWS CLI installation. To run, execute the `docker compose up --build -d` command, in Git Bash configure the local-aws-setup.sh to run as an executable if not already done so (chmod +x ./scripts/local-aws-setup.sh), and execute `.scripts/local-aws-setup.sh`. Verify S3 bucket, database, and mock AWS envara are set up prior to running integration testing (see `npm run test:integration`).
+
 ## Dependencies
 
 ### Compression
@@ -108,6 +112,14 @@ Supports conversion of Markdown (.MD) fragments (currently only to HTML) via the
 ### AWS-SDK/client-s3
 
 S3 AWS SDK for JavaScript to work with the Amazon S3 bucket for storing fragments, replacing the previous in-memory database for back-end storage in Fragments 0.7.x versions and below.
+
+### Sharp
+
+High performance Node.js image processing for converting image-based fragments to other types. Current supported types include PNG, JPG/JPEG, WEBP, AVIF and GIF. At present, conversion to text-based fragments (e.g. MIME types of text/plain, text/markdown, text/html, text/csv) and JSON/YAML data not supported.
+
+### JS-YAML
+
+YAML parser for fragment supported type conversions. Conversion via the :id.ext path param and file extension. Current supported types include direct JSON to YAML/YML and plain text conversion.
 
 ## Development Dependencies
 
