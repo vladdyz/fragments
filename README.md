@@ -121,6 +121,10 @@ High performance Node.js image processing for converting image-based fragments t
 
 YAML parser for fragment supported type conversions. Conversion via the :id.ext path param and file extension. Current supported types include direct JSON to YAML/YML and plain text conversion.
 
+### Csvtojson
+
+CSV parser for fragment supported type conversion (CSV->JSON).
+
 ## Development Dependencies
 
 ### ESLint
