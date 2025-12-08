@@ -57,7 +57,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 
 # I set permissions / ownership to node user (USER node / chown=node:node when copying src, package* and .htpasswd) to mitigate security risk
 # This caused a lot of problems for AWS and has been redacted, along with the removal of test artifacts from prod build (htpasswd)
-
+COPY ./src ./src
 COPY package*.json ./ 
 
 # Alpine needs curl installed to run the healthcheck 
