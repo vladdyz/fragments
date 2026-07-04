@@ -1,5 +1,12 @@
 # fragments
 
+**Fragments** is a cloud-based microservice intended to facilitate the handling of small pieces 
+of data (fragments) and transform the connectivity, digitalization, and automation of the current 
+mode of operation for Canadian manufacturing. It achieves this by acting as a highly scalable 
+service that interconnects with the network of existing internal sub-systems and facilitates their 
+capabilities of working with different lightweight data types such as text-based formats or images, 
+specifically for storage and retrieval. 
+
 ## Script Instructions
 
 ### npm run lint
