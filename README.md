@@ -1,4 +1,14 @@
-# fragments
+# Fragments
+
+
+[![CI](https://github.com/vladdyz/fragments/actions/workflows/ci.yml/badge.svg)](https://github.com/vladdyz/fragments/actions/workflows/ci.yml)
+[![CD](https://github.com/vladdyz/fragments/actions/workflows/cd.yml/badge.svg)](https://github.com/vladdyz/fragments/actions/workflows/cd.yml)
+[![Docker Image Size](https://img.shields.io/docker/image-size/tindal0s/fragments/latest)](https://hub.docker.com/r/tindal0s/fragments)
+[![Docker Pulls](https://img.shields.io/docker/pulls/tindal0s/fragments)](https://hub.docker.com/r/tindal0s/fragments)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazonaws&logoColor=white)
 
 **Fragments** is a cloud-based microservice intended to facilitate the handling of small pieces 
 of data (fragments) and transform the connectivity, digitalization, and automation of the current 
