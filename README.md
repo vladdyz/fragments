@@ -7,6 +7,11 @@ service that interconnects with the network of existing internal sub-systems and
 capabilities of working with different lightweight data types such as text-based formats or images, 
 specifically for storage and retrieval. 
 
+The companion fragments user interface web application repo can be accessed [here](https://github.com/vladdyz/fragments-ui).
+It allows users to authenticate via Amazon Cognito and interact with the microservice through a browser.
+
+A live demonstration video of the microservice can be viewed here [here](https://www.youtube.com/watch?v=4rko1W3KC9I) 
+
 ## Script Instructions
 
 ### npm run lint
